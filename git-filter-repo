@@ -4497,7 +4497,7 @@ class RepoFilter(object):
         )
 
 
-if __name__ == "__main__":
+def main():
     setup_gettext()
     args = FilteringOptions.parse_args(sys.argv[1:])
     if args.analyze:
@@ -4505,3 +4505,7 @@ if __name__ == "__main__":
     else:
         filter = RepoFilter(args)
         filter.run()
+
+
+if __name__ == "__main__":
+    main()
