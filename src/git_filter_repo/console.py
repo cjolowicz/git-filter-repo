@@ -4503,7 +4503,3 @@ def main():
     else:
         filter = RepoFilter(args)
         filter.run()
-
-
-if __name__ == "__main__":
-    main()
