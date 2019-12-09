@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 git-filter-repo filters git repositories, similar to git filter-branch, BFG
 repo cleaner, and others.  The basic idea is that it works by running
