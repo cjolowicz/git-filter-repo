@@ -1,5 +1,6 @@
 import io
 
+from .gettext import _
 from .ids import _IDS
 from .pathquoting import PathQuoting
 
