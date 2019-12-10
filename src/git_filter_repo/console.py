@@ -13,7 +13,7 @@ import time
 import textwrap
 
 from .ancestrygraph import AncestryGraph
-from .elements import _GitElement, _GitElementWithId, Blob, Reset
+from .elements import _GitElement, _GitElementWithId, Blob, FileChange, Reset
 from .gettext import _, setup_gettext
 from .ids import _IDS
 from .mailmap import MailmapInfo
@@ -52,72 +52,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class FileChange(_GitElement):
-    """
-    This class defines our representation of file change elements. File change
-    elements are components within a Commit element.
-    """
-
-    def __init__(self, type_, filename=None, id_=None, mode=None):
-        _GitElement.__init__(self)
-
-        # Denote the type of file-change (b'M' for modify, b'D' for delete, etc)
-        # We could
-        #   assert(type(type_) == bytes)
-        # here but I don't just due to worries about performance overhead...
-        self.type = type_
-
-        # Record the name of the file being changed
-        self.filename = filename
-
-        # Record the mode (mode describes type of file entry (non-executable,
-        # executable, or symlink)).
-        self.mode = mode
-
-        # blob_id is the id (mark) of the affected blob
-        self.blob_id = id_
-
-        if type_ == b"DELETEALL":
-            assert filename is None and id_ is None and mode is None
-            self.filename = b""  # Just so PathQuoting.enquote doesn't die
-        else:
-            assert filename is not None
-
-        if type_ == b"M":
-            assert id_ is not None and mode is not None
-        elif type_ == b"D":
-            assert id_ is None and mode is None
-        elif type_ == b"R":  # pragma: no cover (now avoid fast-export renames)
-            assert mode is None
-            if id_ is None:
-                raise SystemExit(_("new name needed for rename of %s") % filename)
-            self.filename = (self.filename, id_)
-            self.blob_id = None
-
-    def dump(self, file_):
-        """
-        Write this file-change element to a file
-        """
-        skipped_blob = self.type == b"M" and self.blob_id is None
-        if skipped_blob:
-            return
-        self.dumped = 1
-
-        quoted_filename = PathQuoting.enquote(self.filename)
-        if self.type == b"M" and isinstance(self.blob_id, int):
-            file_.write(b"M %s :%d %s\n" % (self.mode, self.blob_id, quoted_filename))
-        elif self.type == b"M":
-            file_.write(b"M %s %s %s\n" % (self.mode, self.blob_id, quoted_filename))
-        elif self.type == b"D":
-            file_.write(b"D %s\n" % quoted_filename)
-        elif self.type == b"DELETEALL":
-            file_.write(b"deleteall\n")
-        else:
-            raise SystemExit(
-                _("Unhandled filechange type: %s") % self.type
-            )  # pragma: no cover
 
 
 class Commit(_GitElementWithId):
