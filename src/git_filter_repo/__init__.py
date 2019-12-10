@@ -27,15 +27,13 @@ operations; however:
     history of a testcase to see whether and how the API changed.
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
-from .console import (
-    RepoFilter,
-)
 from .elements import Blob, Checkpoint, Commit, FileChange, Progress, Reset, Tag
 from .filteringoptions import FilteringOptions
 from .gitutils import GitUtils
 from .fastexportparser import FastExportParser
 from .ids import record_id_rename
 from .progress import ProgressWriter
+from .repofilter import RepoFilter
 from .time import string_to_date, date_to_string
 
 __version__ = "2.24.0"
