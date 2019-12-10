@@ -13,7 +13,17 @@ import time
 import textwrap
 
 from .ancestrygraph import AncestryGraph
-from .elements import _GitElement, _GitElementWithId, Blob, FileChange, Reset
+from .elements import (
+    _GitElement,
+    _GitElementWithId,
+    _SKIPPED_COMMITS,
+    Blob,
+    Commit,
+    FileChange,
+    HASH_TO_ID,
+    ID_TO_HASH,
+    Reset,
+)
 from .gettext import _, setup_gettext
 from .ids import _IDS
 from .mailmap import MailmapInfo
@@ -52,132 +62,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class Commit(_GitElementWithId):
-    """
-    This class defines our representation of commit elements. Commit elements
-    contain all the information associated with a commit.
-    """
-
-    def __init__(
-        self,
-        branch,
-        author_name,
-        author_email,
-        author_date,
-        committer_name,
-        committer_email,
-        committer_date,
-        message,
-        file_changes,
-        parents,
-        original_id=None,
-        encoding=None,  # encoding for message; None implies UTF-8
-        **kwargs
-    ):
-        _GitElementWithId.__init__(self)
-        self.old_id = self.id
-
-        # Denote that this is a commit element
-        self.type = "commit"
-
-        # Record the affected branch
-        self.branch = branch
-
-        # Record original id
-        self.original_id = original_id
-
-        # Record author's name
-        self.author_name = author_name
-
-        # Record author's email
-        self.author_email = author_email
-
-        # Record date of authoring
-        self.author_date = author_date
-
-        # Record committer's name
-        self.committer_name = committer_name
-
-        # Record committer's email
-        self.committer_email = committer_email
-
-        # Record date the commit was made
-        self.committer_date = committer_date
-
-        # Record commit message and its encoding
-        self.encoding = encoding
-        self.message = message
-
-        # List of file-changes associated with this commit. Note that file-changes
-        # are also represented as git elements
-        self.file_changes = file_changes
-
-        self.parents = parents
-
-    def dump(self, file_):
-        """
-        Write this commit element to a file.
-        """
-        self.dumped = 1
-        HASH_TO_ID[self.original_id] = self.id
-        ID_TO_HASH[self.id] = self.original_id
-
-        # Make output to fast-import slightly easier for humans to read if the
-        # message has no trailing newline of its own; cosmetic, but a nice touch...
-        extra_newline = b"\n"
-        if self.message.endswith(b"\n") or not (self.parents or self.file_changes):
-            extra_newline = b""
-
-        if not self.parents:
-            file_.write(b"reset %s\n" % self.branch)
-        file_.write(
-            (
-                b"commit %s\n"
-                b"mark :%d\n"
-                b"author %s <%s> %s\n"
-                b"committer %s <%s> %s\n"
-            )
-            % (
-                self.branch,
-                self.id,
-                self.author_name,
-                self.author_email,
-                self.author_date,
-                self.committer_name,
-                self.committer_email,
-                self.committer_date,
-            )
-        )
-        if self.encoding:
-            file_.write(b"encoding %s\n" % self.encoding)
-        file_.write(b"data %d\n%s%s" % (len(self.message), self.message, extra_newline))
-        for i, parent in enumerate(self.parents):
-            file_.write(b"from " if i == 0 else b"merge ")
-            if isinstance(parent, int):
-                file_.write(b":%d\n" % parent)
-            else:
-                file_.write(b"%s\n" % parent)
-        for change in self.file_changes:
-            change.dump(file_)
-        if not self.parents and not self.file_changes:
-            # Workaround a bug in pre-git-2.22 versions of fast-import with
-            # the get-mark directive.
-            file_.write(b"\n")
-        file_.write(b"\n")
-
-    def first_parent(self):
-        """
-        Return first parent commit
-        """
-        if self.parents:
-            return self.parents[0]
-        return None
-
-    def skip(self, new_id=None):
-        _SKIPPED_COMMITS.add(self.old_id or self.id)
-        _GitElementWithId.skip(self, new_id)
 
 
 class Tag(_GitElementWithId):
@@ -925,12 +809,6 @@ def record_id_rename(old_id, new_id):
     """
     handle_transitivity = True
     _IDS.record_rename(old_id, new_id, handle_transitivity)
-
-
-# Internal globals
-_SKIPPED_COMMITS = set()
-HASH_TO_ID = {}
-ID_TO_HASH = {}
 
 
 class SubprocessWrapper(object):
