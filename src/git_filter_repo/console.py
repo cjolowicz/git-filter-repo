@@ -22,6 +22,7 @@ from .elements import (
     FileChange,
     HASH_TO_ID,
     ID_TO_HASH,
+    Progress,
     Reset,
     Tag,
 )
@@ -63,32 +64,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class Progress(_GitElement):
-    """
-    This class defines our representation of progress elements. The progress
-    element only contains a progress message, which is printed by fast-import
-    when it processes the progress output.
-    """
-
-    def __init__(self, message):
-        _GitElement.__init__(self)
-
-        # Denote that this is a progress element
-        self.type = "progress"
-
-        # Store the progress message
-        self.message = message
-
-    def dump(self, file_):
-        """
-        Write this progress element to a file
-        """
-        self.dumped = 1
-
-        file_.write(b"progress %s\n" % self.message)
-        file_.write(b"\n")
 
 
 class Checkpoint(_GitElement):

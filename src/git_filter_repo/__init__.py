@@ -28,7 +28,6 @@ operations; however:
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
 from .console import (
-    Progress,
     Checkpoint,
     FastExportParser,
     ProgressWriter,
@@ -38,7 +37,7 @@ from .console import (
     RepoFilter,
 )
 from .time import string_to_date, date_to_string
-from .elements import Blob, Commit, FileChange, Reset, Tag
+from .elements import Blob, Commit, FileChange, Progress, Reset, Tag
 
 __version__ = "2.24.0"
 __all__ = [
