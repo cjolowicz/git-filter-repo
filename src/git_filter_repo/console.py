@@ -21,6 +21,7 @@ from .elements import (
     ID_TO_HASH,
     Reset,
     Tag,
+    write_marks,
 )
 from .gettext import _, setup_gettext
 from .gitutils import GitUtils
@@ -33,7 +34,6 @@ from .utils import decode
 
 
 deleted_hash = b"0" * 40
-write_marks = True
 
 
 def glob_to_regex(glob_bytestr):
@@ -722,8 +722,8 @@ EXAMPLES
         p.wait()
         output = p.stdout.read()
         if b"--mark-tags" not in output:  # pragma: no cover
-            global write_marks
-            write_marks = False
+            from . import elements
+            elements.write_marks = False
             if args.state_branch:
                 raise SystemExit(
                     _(

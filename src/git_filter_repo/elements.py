@@ -4,6 +4,8 @@ from .ids import _IDS
 from .pathquoting import PathQuoting
 
 
+write_marks = True
+
 # Internal globals
 _SKIPPED_COMMITS = set()
 HASH_TO_ID = {}
