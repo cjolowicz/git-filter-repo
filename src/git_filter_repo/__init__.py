@@ -28,11 +28,11 @@ operations; however:
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
 from .console import (
-    GitUtils,
     FilteringOptions,
     RepoFilter,
 )
 from .elements import Blob, Checkpoint, Commit, FileChange, Progress, Reset, Tag
+from .gitutils import GitUtils
 from .fastexportparser import FastExportParser
 from .ids import record_id_rename
 from .progress import ProgressWriter
