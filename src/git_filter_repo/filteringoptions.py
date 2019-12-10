@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 
+from .gettext import _
 from .subprocess import subproc
 from .utils import decode
 
