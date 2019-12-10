@@ -37,13 +37,12 @@ from .console import (
     Checkpoint,
     FastExportParser,
     ProgressWriter,
-    string_to_date,
-    date_to_string,
     record_id_rename,
     GitUtils,
     FilteringOptions,
     RepoFilter,
 )
+from .time import string_to_date, date_to_string
 
 __version__ = "2.24.0"
 __all__ = [

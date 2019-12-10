@@ -13,7 +13,6 @@ import time
 import textwrap
 
 from .gettext import _, setup_gettext
-from .time import string_to_date, date_to_string
 
 
 deleted_hash = b"0" * 40
