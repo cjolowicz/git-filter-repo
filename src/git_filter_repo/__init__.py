@@ -28,7 +28,6 @@ operations; however:
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
 from .console import (
-    FastExportParser,
     ProgressWriter,
     record_id_rename,
     GitUtils,
@@ -37,6 +36,7 @@ from .console import (
 )
 from .time import string_to_date, date_to_string
 from .elements import Blob, Checkpoint, Commit, FileChange, Progress, Reset, Tag
+from .fastexportparser import FastExportParser
 
 __version__ = "2.24.0"
 __all__ = [
