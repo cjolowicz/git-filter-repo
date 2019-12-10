@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 from .elements import FileChange
+from .gettext import _
 from .pathquoting import PathQuoting
 from .progress import ProgressWriter
 from .subprocess import subproc
