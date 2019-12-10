@@ -426,3 +426,27 @@ class Progress(_GitElement):
 
         file_.write(b"progress %s\n" % self.message)
         file_.write(b"\n")
+
+
+class Checkpoint(_GitElement):
+    """
+    This class defines our representation of checkpoint elements.  These
+    elements represent events which force fast-import to close the current
+    packfile, start a new one, and to save out all current branch refs, tags
+    and marks.
+    """
+
+    def __init__(self):
+        _GitElement.__init__(self)
+
+        # Denote that this is a checkpoint element
+        self.type = "checkpoint"
+
+    def dump(self, file_):
+        """
+        Write this checkpoint element to a file
+        """
+        self.dumped = 1
+
+        file_.write(b"checkpoint\n")
+        file_.write(b"\n")

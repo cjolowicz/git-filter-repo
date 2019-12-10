@@ -19,6 +19,7 @@ from .elements import (
     _SKIPPED_COMMITS,
     Blob,
     Commit,
+    Checkpoint,
     FileChange,
     HASH_TO_ID,
     ID_TO_HASH,
@@ -64,30 +65,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class Checkpoint(_GitElement):
-    """
-    This class defines our representation of checkpoint elements.  These
-    elements represent events which force fast-import to close the current
-    packfile, start a new one, and to save out all current branch refs, tags
-    and marks.
-    """
-
-    def __init__(self):
-        _GitElement.__init__(self)
-
-        # Denote that this is a checkpoint element
-        self.type = "checkpoint"
-
-    def dump(self, file_):
-        """
-        Write this checkpoint element to a file
-        """
-        self.dumped = 1
-
-        file_.write(b"checkpoint\n")
-        file_.write(b"\n")
 
 
 class LiteralCommand(_GitElement):
