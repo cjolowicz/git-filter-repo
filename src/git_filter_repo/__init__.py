@@ -29,11 +29,11 @@ operations; however:
 """
 from .console import (
     ProgressWriter,
-    record_id_rename,
     GitUtils,
     FilteringOptions,
     RepoFilter,
 )
+from .ids import record_id_rename
 from .time import string_to_date, date_to_string
 from .elements import Blob, Checkpoint, Commit, FileChange, Progress, Reset, Tag
 from .fastexportparser import FastExportParser

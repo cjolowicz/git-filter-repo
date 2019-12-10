@@ -82,3 +82,11 @@ class _IDs(object):
 
 
 _IDS = _IDs()
+
+
+def record_id_rename(old_id, new_id):
+    """
+    Register a new translation
+    """
+    handle_transitivity = True
+    _IDS.record_rename(old_id, new_id, handle_transitivity)
