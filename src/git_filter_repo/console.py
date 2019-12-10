@@ -23,6 +23,7 @@ from .elements import (
     FileChange,
     HASH_TO_ID,
     ID_TO_HASH,
+    LiteralCommand,
     Progress,
     Reset,
     Tag,
@@ -65,30 +66,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class LiteralCommand(_GitElement):
-    """
-    This class defines our representation of commands. The literal command
-    includes only a single line, and is not processed in any special way.
-    """
-
-    def __init__(self, line):
-        _GitElement.__init__(self)
-
-        # Denote that this is a literal element
-        self.type = "literal"
-
-        # Store the command
-        self.line = line
-
-    def dump(self, file_):
-        """
-        Write this progress element to a file
-        """
-        self.dumped = 1
-
-        file_.write(self.line)
 
 
 class Alias(_GitElement):
