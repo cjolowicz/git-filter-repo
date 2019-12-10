@@ -474,3 +474,27 @@ class LiteralCommand(_GitElement):
         self.dumped = 1
 
         file_.write(self.line)
+
+
+class Alias(_GitElement):
+    """
+    This class defines our representation of fast-import alias elements.  An
+    alias element is the setting of one mark to the same sha1sum as another,
+    usually because the newer mark corresponded to a pruned commit.
+    """
+
+    def __init__(self, ref, to_ref):
+        _GitElement.__init__(self)
+        # Denote that this is a reset
+        self.type = "alias"
+
+        self.ref = ref
+        self.to_ref = to_ref
+
+    def dump(self, file_):
+        """
+        Write this reset element to a file
+        """
+        self.dumped = 1
+
+        file_.write(b"alias\nmark :%d\nto :%d\n\n" % (self.ref, self.to_ref))
