@@ -1,4 +1,4 @@
-"""Console interface for git-filter-branch."""
+"""Console interface for git-filter-repo."""
 import sys
 
 from .filteringoptions import FilteringOptions
