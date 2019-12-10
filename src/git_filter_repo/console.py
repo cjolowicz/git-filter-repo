@@ -13,7 +13,7 @@ import time
 import textwrap
 
 from .ancestrygraph import AncestryGraph
-from .elements import _GitElement, _GitElementWithId
+from .elements import _GitElement, _GitElementWithId, Blob
 from .gettext import _, setup_gettext
 from .ids import _IDS
 from .mailmap import MailmapInfo
@@ -52,39 +52,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class Blob(_GitElementWithId):
-    """
-    This class defines our representation of git blob elements (i.e. our
-    way of representing file contents).
-    """
-
-    def __init__(self, data, original_id=None):
-        _GitElementWithId.__init__(self)
-
-        # Denote that this is a blob
-        self.type = "blob"
-
-        # Record original id
-        self.original_id = original_id
-
-        # Stores the blob's data
-        assert type(data) == bytes
-        self.data = data
-
-    def dump(self, file_):
-        """
-        Write this blob element to a file.
-        """
-        self.dumped = 1
-        HASH_TO_ID[self.original_id] = self.id
-        ID_TO_HASH[self.id] = self.original_id
-
-        file_.write(b"blob\n")
-        file_.write(b"mark :%d\n" % self.id)
-        file_.write(b"data %d\n%s" % (len(self.data), self.data))
-        file_.write(b"\n")
 
 
 class Reset(_GitElement):

@@ -70,3 +70,36 @@ class _GitElementWithId(_GitElement):
         self.dumped = 2
 
         _IDS.record_rename(self.old_id or self.id, new_id)
+
+
+class Blob(_GitElementWithId):
+    """
+    This class defines our representation of git blob elements (i.e. our
+    way of representing file contents).
+    """
+
+    def __init__(self, data, original_id=None):
+        _GitElementWithId.__init__(self)
+
+        # Denote that this is a blob
+        self.type = "blob"
+
+        # Record original id
+        self.original_id = original_id
+
+        # Stores the blob's data
+        assert type(data) == bytes
+        self.data = data
+
+    def dump(self, file_):
+        """
+        Write this blob element to a file.
+        """
+        self.dumped = 1
+        HASH_TO_ID[self.original_id] = self.id
+        ID_TO_HASH[self.id] = self.original_id
+
+        file_.write(b"blob\n")
+        file_.write(b"mark :%d\n" % self.id)
+        file_.write(b"data %d\n%s" % (len(self.data), self.data))
+        file_.write(b"\n")
