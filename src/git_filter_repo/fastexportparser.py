@@ -10,6 +10,7 @@ from .elements import (
     Reset,
     Tag,
 )
+from .gettext import _
 from .pathquoting import PathQuoting
 
 
