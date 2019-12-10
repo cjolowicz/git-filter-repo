@@ -4,7 +4,6 @@ import collections
 import fnmatch
 import io
 import os
-import platform
 import re
 import shutil
 import subprocess
@@ -29,6 +28,7 @@ from .ids import _IDS
 from .mailmap import MailmapInfo
 from .pathquoting import PathQuoting
 from .progress import ProgressWriter
+from .subprocess import subproc
 from .utils import decode
 
 
@@ -62,39 +62,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class SubprocessWrapper(object):
-    @staticmethod
-    def decodify(args):
-        if type(args) == str:
-            return args
-        else:
-            assert type(args) == list
-            return [decode(x) if type(x) == bytes else x for x in args]
-
-    @staticmethod
-    def call(*args, **kwargs):
-        if "cwd" in kwargs:
-            kwargs["cwd"] = decode(kwargs["cwd"])
-        return subprocess.call(SubprocessWrapper.decodify(*args), **kwargs)
-
-    @staticmethod
-    def check_output(*args, **kwargs):
-        if "cwd" in kwargs:
-            kwargs["cwd"] = decode(kwargs["cwd"])
-        return subprocess.check_output(SubprocessWrapper.decodify(*args), **kwargs)
-
-    @staticmethod
-    def Popen(*args, **kwargs):
-        if "cwd" in kwargs:
-            kwargs["cwd"] = decode(kwargs["cwd"])
-        return subprocess.Popen(SubprocessWrapper.decodify(*args), **kwargs)
-
-
-subproc = subprocess
-if platform.system() == "Windows" or "PRETEND_UNICODE_ARGS" in os.environ:
-    subproc = SubprocessWrapper
 
 
 class GitUtils(object):
