@@ -13,15 +13,11 @@ import time
 import textwrap
 
 from .gettext import _, setup_gettext
+from .utils import decode
 
 
 deleted_hash = b"0" * 40
 write_marks = True
-
-
-def decode(bytestr):
-    "Try to convert bytestr to utf-8 for outputting as an error message."
-    return bytestr.decode("utf-8", "backslashreplace")
 
 
 def glob_to_regex(glob_bytestr):
