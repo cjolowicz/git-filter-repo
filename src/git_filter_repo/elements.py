@@ -336,3 +336,67 @@ class Commit(_GitElementWithId):
     def skip(self, new_id=None):
         _SKIPPED_COMMITS.add(self.old_id or self.id)
         _GitElementWithId.skip(self, new_id)
+
+
+class Tag(_GitElementWithId):
+    """
+    This class defines our representation of annotated tag elements.
+    """
+
+    def __init__(
+        self,
+        ref,
+        from_ref,
+        tagger_name,
+        tagger_email,
+        tagger_date,
+        tag_msg,
+        original_id=None,
+    ):
+        _GitElementWithId.__init__(self)
+        self.old_id = self.id
+
+        # Denote that this is a tag element
+        self.type = "tag"
+
+        # Store the name of the tag
+        self.ref = ref
+
+        # Store the entity being tagged (this should be a commit)
+        self.from_ref = from_ref
+
+        # Record original id
+        self.original_id = original_id
+
+        # Store the name of the tagger
+        self.tagger_name = tagger_name
+
+        # Store the email of the tagger
+        self.tagger_email = tagger_email
+
+        # Store the date
+        self.tagger_date = tagger_date
+
+        # Store the tag message
+        self.message = tag_msg
+
+    def dump(self, file_):
+        """
+        Write this tag element to a file
+        """
+
+        self.dumped = 1
+        HASH_TO_ID[self.original_id] = self.id
+        ID_TO_HASH[self.id] = self.original_id
+
+        file_.write(b"tag %s\n" % self.ref)
+        if write_marks and self.id:
+            file_.write(b"mark :%d\n" % self.id)
+        markfmt = b"from :%d\n" if isinstance(self.from_ref, int) else b"from %s\n"
+        file_.write(markfmt % self.from_ref)
+        if self.tagger_name:
+            file_.write(b"tagger %s <%s> " % (self.tagger_name, self.tagger_email))
+            file_.write(self.tagger_date)
+            file_.write(b"\n")
+        file_.write(b"data %d\n%s" % (len(self.message), self.message))
+        file_.write(b"\n")
