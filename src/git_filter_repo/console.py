@@ -13,7 +13,7 @@ import time
 import textwrap
 
 from .ancestrygraph import AncestryGraph
-from .elements import _GitElement, _GitElementWithId, Blob
+from .elements import _GitElement, _GitElementWithId, Blob, Reset
 from .gettext import _, setup_gettext
 from .ids import _IDS
 from .mailmap import MailmapInfo
@@ -52,40 +52,6 @@ def glob_to_regex(glob_bytestr):
 
     # Finally, convert back to regex operating on bytestr
     return regex.encode()
-
-
-class Reset(_GitElement):
-    """
-    This class defines our representation of git reset elements.  A reset
-    event is the creation (or recreation) of a named branch, optionally
-    starting from a specific revision).
-    """
-
-    def __init__(self, ref, from_ref=None):
-        _GitElement.__init__(self)
-
-        # Denote that this is a reset
-        self.type = "reset"
-
-        # The name of the branch being (re)created
-        self.ref = ref
-
-        # Some reference to the branch/commit we are resetting from
-        self.from_ref = from_ref
-
-    def dump(self, file_):
-        """
-        Write this reset element to a file
-        """
-        self.dumped = 1
-
-        file_.write(b"reset %s\n" % self.ref)
-        if self.from_ref:
-            if isinstance(self.from_ref, int):
-                file_.write(b"from :%d\n" % self.from_ref)
-            else:
-                file_.write(b"from %s\n" % self.from_ref)
-            file_.write(b"\n")
 
 
 class FileChange(_GitElement):

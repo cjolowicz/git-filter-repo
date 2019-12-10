@@ -28,7 +28,6 @@ operations; however:
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
 from .console import (
-    Reset,
     FileChange,
     Commit,
     Tag,
@@ -42,7 +41,7 @@ from .console import (
     RepoFilter,
 )
 from .time import string_to_date, date_to_string
-from .elements import Blob
+from .elements import Blob, Reset
 
 __version__ = "2.24.0"
 __all__ = [
