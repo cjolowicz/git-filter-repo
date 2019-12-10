@@ -5,6 +5,7 @@ import sys
 import textwrap
 
 from .ancestrygraph import AncestryGraph
+from .gettext import _
 from .gitutils import GitUtils
 from .pathquoting import PathQuoting
 from .progress import ProgressWriter
