@@ -28,7 +28,6 @@ operations; however:
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
 from .console import (
-    ProgressWriter,
     GitUtils,
     FilteringOptions,
     RepoFilter,
@@ -37,6 +36,7 @@ from .ids import record_id_rename
 from .time import string_to_date, date_to_string
 from .elements import Blob, Checkpoint, Commit, FileChange, Progress, Reset, Tag
 from .fastexportparser import FastExportParser
+from .progress import ProgressWriter
 
 __version__ = "2.24.0"
 __all__ = [
