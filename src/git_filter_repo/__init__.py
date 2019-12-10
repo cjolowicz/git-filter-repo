@@ -27,4 +27,39 @@ operations; however:
     history of a testcase to see whether and how the API changed.
     ***** END API BACKWARD COMPATIBILITY CAVEAT *****
 """
+from .console import (
+    Blob,
+    Reset,
+    FileChange,
+    Commit,
+    Tag,
+    Progress,
+    Checkpoint,
+    FastExportParser,
+    ProgressWriter,
+    string_to_date,
+    date_to_string,
+    record_id_rename,
+    GitUtils,
+    FilteringOptions,
+    RepoFilter,
+)
+
 __version__ = "2.24.0"
+__all__ = [
+    "Blob",
+    "Reset",
+    "FileChange",
+    "Commit",
+    "Tag",
+    "Progress",
+    "Checkpoint",
+    "FastExportParser",
+    "ProgressWriter",
+    "string_to_date",
+    "date_to_string",
+    "record_id_rename",
+    "GitUtils",
+    "FilteringOptions",
+    "RepoFilter",
+]

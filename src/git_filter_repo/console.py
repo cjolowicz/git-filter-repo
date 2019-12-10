@@ -16,24 +16,6 @@ from .gettext import _, setup_gettext
 from .time import string_to_date, date_to_string
 
 
-__all__ = [
-    "Blob",
-    "Reset",
-    "FileChange",
-    "Commit",
-    "Tag",
-    "Progress",
-    "Checkpoint",
-    "FastExportParser",
-    "ProgressWriter",
-    "string_to_date",
-    "date_to_string",
-    "record_id_rename",
-    "GitUtils",
-    "FilteringOptions",
-    "RepoFilter",
-]
-
 deleted_hash = b"0" * 40
 write_marks = True
 
