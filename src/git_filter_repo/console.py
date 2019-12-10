@@ -14,8 +14,6 @@ import textwrap
 
 from .ancestrygraph import AncestryGraph
 from .elements import (
-    _GitElement,
-    _GitElementWithId,
     _SKIPPED_COMMITS,
     Alias,
     Blob,
